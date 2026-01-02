@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>House Pricing Model</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+      }
+
+      .calculator-container {
+        max-width: 650px;
+        margin: auto;
+        margin-top: 50px;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      h1 {
+        color: #ffffff;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+      }
+
+      .form-label {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+        text-align: left;
+        color: #dcdcdc;
+      }
+
+      input.form-control,
+      select.custom-select-dark {
+        font-size: 1rem;
+        padding: 12px;
+        background-color: rgba(255, 255, 255, 0.07);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+
+      input.form-control::placeholder {
+        color: #bbb;
+      }
+
+      input.form-control:focus,
+      select.custom-select-dark:focus {
+        border-color: #66ffcc;
+        box-shadow: 0 0 8px #66ffcc;
+        outline: none;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .custom-select-dark {
+        width: 100%;
+        margin-bottom: 15px;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20fill='white'%20height='16'%20viewBox='0%200%2024%2024'%20width='16'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M7%2010l5%205%205-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+      }
+
+      .btn-outline-light {
+        border-radius: 10px;
+        padding: 10px 25px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: background 0.3s ease;
+      }
+
+      .btn-outline-light:hover {
+        background-color: #66ffcc;
+        color: #000;
+        border-color: #66ffcc;
+      }
+
+      .hen {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .pt-3 input[readonly] {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #66ffcc;
+        font-weight: bold;
+        border: none;
+        text-align: center;
+      }
+      .custom-select-dark {
+        background-color: #111;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 1.05rem;
+        width: 100%;
+        margin-bottom: 10px;
+        appearance: none;
+      }
+      
+      .custom-select-dark option {
+        background-color: #111;
+        color: white;
+      }
+      
+      .custom-select-dark:focus {
+        outline: none;
+        border-color: #888;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+      }
+      
+    </style>
+  </head>
+  <body>
+
+    <form method='post'>
+      {% csrf_token %}
+      <div class="container">
+        <div class="calculator-container">
+          <h1 class="text-center mb-4">House Pricing Prediction</h1>
+
+          <!-- Property Type -->
+          <label class="form-label">Property Type</label>
+          <select name="property_type" class="custom-select-dark" required>
+            <option value="">Select Property Type</option>
+            <option value="flat" {% if property_type == "Flat" %}selected{% endif %}>Flat</option>
+            <option value="house" {% if property_type == "House" %}selected{% endif %}>House</option>
+            <option value="penthouse" {% if property_type == "Penthouse" %}selected{% endif %}>Penthouse</option>
+            <option value="lower_portion" {% if property_type == "Lower Portion" %}selected{% endif %}>Lower Portion</option>
+            <option value="upper_portion" {% if property_type == "Upper Portion" %}selected{% endif %}>Upper Portion</option>
+            <option value="farm_house" {% if property_type == "Farm House" %}selected{% endif %}>Farm House</option>
+            <option value="room" {% if property_type == "Room" %}selected{% endif %}>Room</option>
+          </select>
+
+          <!-- City -->
+          <label class="form-label">City</label>
+          <select name="city" class="custom-select-dark" required>
+            <option value="">Select City</option>
+            <option value="islamabad" {% if city == "Islamabad" %}selected{% endif %}>Islamabad</option>
+            <option value="lahore" {% if city == "Lahore" %}selected{% endif %}>Lahore</option>
+            <option value="faisalabad" {% if city == "Faisalabad" %}selected{% endif %}>Faisalabad</option>
+            <option value="rawalpindi" {% if city == "Rawalpindi" %}selected{% endif %}>Rawalpindi</option>
+            <option value="karachi" {% if city == "Karachi" %}selected{% endif %}>Karachi</option>
+          </select>
+
+          <!-- Province -->
+          <label class="form-label">Province</label>
+          <select name="province_name" class="custom-select-dark" required>
+            <option value="">Select Province</option>
+            <option value="islamabad_capital" {% if province_name == "Islamabad Capital" %}selected{% endif %}>Islamabad Capital</option>
+            <option value="punjab" {% if province_name == "Punjab" %}selected{% endif %}>Punjab</option>
+            <option value="sindh" {% if province_name == "Sindh" %}selected{% endif %}>Sindh</option>
+          </select>
+
+          <!-- Latitude -->
+          <label class="form-label">Latitude</label>
+          <input type="number" step="any" class="form-control" name="latitude" value="{{ latitude }}" placeholder="Enter value" required>
+
+          <!-- Longitude -->
+          <label class="form-label">Longitude</label>
+          <input type="number" step="any" class="form-control" name="longitude" value="{{ longitude }}" placeholder="Enter value" required>
+
+          <!-- Baths -->
+          <label class="form-label">Baths</label>
+          <input type="number" step="any" class="form-control" name="baths" value="{{ baths }}" placeholder="Enter value" required>
+
+          <!-- Bedrooms -->
+          <label class="form-label">Bedrooms</label>
+          <input type="number" step="any" class="form-control" name="bedrooms" value="{{ bedrooms }}" placeholder="Enter value" required>
+
+          <!-- Total Area -->
+          <label class="form-label">Total Area</label>
+          <input type="number" step="any" class="form-control" name="total_area" value="{{ total_area }}" placeholder="Enter value" required>
+
+          <!-- Submit Button -->
+          <div class="hen">
+            <button type="submit" class="btn btn-outline-light">Submit</button>
+          </div>
+
+          <!-- Output -->
+          <div class="pt-3">
+            <label class="form-label text-center">Predicted Price</label>
+            <input class="form-control" value="{{ result }}" placeholder="Output" readonly>
+          </div>
+        </div>
+      </div>
+    </form>
+<br><br><br>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  </body>
+</html>
